@@ -11,7 +11,7 @@ Unofficial. Not affiliated with Spider Farmer. The cloud can change or reject th
 Python 3.11 or newer.
 
 ```bash
-pip install "spiderfarmer[mqtt] @ git+https://github.com/zeroXmrcl/spider-farmer.git"
+pip install "spiderfarmer[mqtt] @ git+https://github.com/zeroXmrcl/spiderfarmer.git"
 ```
 
 `spiderfarmer` without `[mqtt]` is the same install if you only need login and the device list. This package is not on PyPI. The command above installs it from GitHub.
