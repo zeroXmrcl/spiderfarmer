@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spiderfarmer"
+version = "0.1.0"
+description = "Unofficial Python client for the Spider Farmer cloud API"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = [
+    "cryptography>=44",
+    "requests>=2.32",
+]
+
+[project.optional-dependencies]
+mqtt = ["paho-mqtt>=2.1"]
+dev = ["pytest>=8", "paho-mqtt>=2.1"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+spiderfarmer = ["certs/*.pem"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
