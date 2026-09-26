@@ -35,6 +35,7 @@ class Client:
         self.app_version = app_version
         self.timeout = timeout
         self._post = post
+        self._req_seq = 0
 
     def login(self, email: str, password: str, *, now_s: int | None = None) -> Session:
         payload = self.call(
@@ -72,6 +73,7 @@ class Client:
     ) -> dict[str, Any]:
         """POST one iOS path. ``body is None`` sends an empty body. A dict is encrypted."""
         stamp = int(time.time()) if now_s is None else now_s
+        self._req_seq += 1
         token = None if session is None else session.token
         headers = {
             "Content-Type": "application/json",
@@ -82,6 +84,7 @@ class Client:
                 device_id=self.device_id,
                 app_version=self.app_version,
                 timezone=self.timezone,
+                req_id=stamp * 1000 + self._req_seq,
             ),
         }
         data = None if body is None else encrypt_body(body)

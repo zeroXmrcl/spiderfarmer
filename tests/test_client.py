@@ -53,7 +53,7 @@ class LoginTests(unittest.TestCase):
         self.assertEqual(system["appVersion"], "2.5.2")
         self.assertEqual(system["osType"], "iOS")
         self.assertEqual(system["timestamp"], 1_700_000_000)
-        self.assertEqual(system["reqId"], 1_700_000_000_000)
+        self.assertEqual(system["reqId"], 1_700_000_000_001)
         self.assertNotIn("token", system)
         self.assertEqual(
             decrypt_body(seen["data"]),
@@ -141,6 +141,20 @@ class InventoryTests(unittest.TestCase):
         self.assertEqual(devices[0].prefix, "CB")
         self.assertEqual(devices[0].room_id, 7)
         self.assertTrue(devices[0].online)
+
+
+class ReplayTests(unittest.TestCase):
+    def test_two_calls_in_the_same_second_use_different_request_ids(self) -> None:
+        seen: list[int] = []
+
+        def post(url, data=None, headers=None, timeout=None):  # noqa: ANN001
+            seen.append(json.loads(headers["systemdata"])["reqId"])
+            return _response(json.dumps({"code": "000", "data": []}))
+
+        client = Client(post=post)
+        client.rooms(_session(), now_s=1_700_000_000)
+        client.rooms(_session(), now_s=1_700_000_000)
+        self.assertEqual(seen, [1_700_000_000_001, 1_700_000_000_002])
 
 
 class EnvelopeTests(unittest.TestCase):
